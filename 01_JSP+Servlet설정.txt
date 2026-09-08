@@ -1,0 +1,340 @@
+
+1. 톰캣 다운로드 및 설치와 실행
+https://tomcat.apache.org/download-10.cgi
+C:\server\apache-tomcat-10.1.59\bin\startup.bat
+
+localhost:8080
+
+
+
+2. PostgreSQL 다운로드 및 설치
+https://www.postgresql.org/download/windows
+Stack Builder 해제
+Port       : 5432
+Username   : postgres
+Password   : 본인이 지정 -> 1004
+
+
+3. 데이터베이스 생성
+pgAdmin 4를 실행하여 
+app 데이터베이스 만들기
+
+
+
+4. 프로젝트는 Maven 프로젝트로 생성
+
+IntelliJ에서 New Project 선택
+
+왼쪽 New Project에서 Java 선택
+
+Name: board
+
+Location: C:\gt\jsp
+
+Build system: Maven
+
+JDK: zulu-21
+
+[Advanced Setting]
+
+Groupid: com.mobility.git
+
+ArtifactId: project1
+
+프로젝트 생성(Create)
+
+프로젝트가 만들어지면 대략:
+
+project1
+├── pom.xml
+├── src
+│   ├── main
+│   │   ├── java
+│   │   ├── resources
+│   │   └── webapp
+│   └── test
+└── ...
+
+여기에서 webapp 디렉터리를 만들어야 합니다.
+
+
+
+5. 프로젝트 사용 라이브러리 의존성 설정
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.mobility.git</groupId>
+    <artifactId>project1</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <packaging>war</packaging>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <!-- Servlet API -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSP API -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
+            <version>3.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSTL API -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+        <!-- JSTL Implementation -->
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
+        <!-- PostgreSQL JDBC Driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.13</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>board-mvc</finalName>
+
+        <plugins>
+
+            <!-- Java 21 compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
+                <configuration>
+                    <release>21</release>
+                </configuration>
+            </plugin>
+
+            <!-- WAR packaging -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
+
+위 내용 작성 후 저장하고, [m] 아이콘을 눌러 Refresh 함
+
+
+
+
+
+6. 서버 설정
+6.1 Smart Tomcat 설치
+
+IntelliJ에서:
+
+File → Settings → Plugins
+
+또는
+
+Ctrl + Alt + S
+
+그 다음:
+
+Marketplace → 검색창에
+
+Smart Tomcat
+
+을 입력하세요.
+
+여기서 제가 추천하는 것은:
+
+SmartTomcat — zeng kid
+
+입니다.
+
+현재 Marketplace 기준 최신 안정 버전은 4.8.0입니다.
+
+Install → Restart IDE
+
+하면 됩니다.
+
+
+
+6.2 Tomcat 설치 확인
+
+설치가 제대로 됐는지 확인
+
+IntelliJ를 재시작한 다음
+
+File → Settings
+
+로 들어갑니다.
+
+왼쪽 메뉴에 기존에는 없었던
+
+Tomcat Server
+
+가 생겼는지 확인하세요.
+
+
+
+6.3 Tomcat 등록
+
+이제
+
+Settings → Tomcat Server
+
+로 들어갑니다.
+
+오른쪽의 + 버튼을 누릅니다.
+
+그리고 우리가 설치한 Tomcat 폴더를 선택합니다.
+
+예를 들어:
+
+C:\server\apache-tomcat-10.1.59
+
+즉, bin 폴더를 선택하는 게 아니라 Tomcat 최상위 폴더를 선택합니다.
+
+정상적으로 등록되면 대략 이런 형태입니다.
+
+Tomcat Server
+
+Name:
+Tomcat 10.1.59
+
+Application server:
+C:\server\apache-tomcat-10.1.59
+
+그리고 Apply → OK.
+
+
+6.4 실행 설정
+
+Run Configuration
+
+상단 메뉴에서:
+
+Run → Edit Configurations...
+
+를 선택합니다.
+
+왼쪽 위:
+
++
+
+를 누릅니다.
+
+여기서
+
+Smart Tomcat
+
+을 선택합니다.
+
+이게 Community Edition에서 우리가 원하는 Tomcat 실행 설정입니다.
+
+공식 SmartTomcat 사용법도 Run → Edit Configurations → + → Smart Tomcat 방식입니다.
+
+
+
+
+6.5 Smart Tomcat 설정
+
+여기서 몇 가지를 입력합니다.
+
+Tomcat Server
+
+아까 등록한:
+
+Tomcat 10.1.59
+
+선택.
+
+Deployment Directory
+
+다음 폴더:
+
+C:\...\project1\src\main\webapp
+
+또는 IntelliJ에서 프로젝트 기준으로:
+
+$PROJECT_DIR$\src\main\webapp
+Context Path
+
+저는 처음에는:
+
+/project1
+
+를 추천합니다.
+
+Server Port
+8080
+JRE
+
+JDK 21
+
+을 선택합니다.
+
+즉 전체적으로:
+
+Name: Board MVC
+
+Tomcat Server: Tomcat 10.1.59
+
+Deployment Directory: $PROJECT_DIR$\src\main\webapp
+
+Context Path: /project1
+
+Server Port: 8080
+
+JRE: JDK 21
+
+이렇게 만들면 됩니다.
+
+SmartTomcat은 프로젝트의 Webapp 클래스와 라이브러리를 자동으로 Tomcat의 classpath에 구성해 주기 때문에 직접 WEB-INF/classes, WEB-INF/lib에 복사하는 방식으로 작업할 필요가 없습니다.
+
+
+
+6.6 Apply → Run
+
+이제:
+
+Apply → OK
+
+합니다.
+
+IntelliJ 상단의 실행 설정에
+
+project1
+
+이 나타날 겁니다.
+
+그리고 ▶️ Run 버튼을 누릅니다.
+
+그러면 IntelliJ 아래쪽에 Tomcat 로그가 나타납니다.
